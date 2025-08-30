@@ -9,25 +9,29 @@ from studybuddyai.common.custom_exception import CustomException
 
 class QuestionGenerator:
     def __init__(self):
-        self.llm = get_openai_llm
+        self.llm = get_openai_llm()
         self.logger = get_logger(self.__class__.__name__)
 
-    def _retry_and_parse(self, prompt, parser, topic, difficulty):
+    def _retry_and_parse(self,prompt,parser,topic,difficulty):
 
         for attempt in range(settings.MAX_RETRIES):
             try:
-                self.logger.info(f"Generating question for topic {topic} and difficulty {difficulty}")
-                response = self.llm.invoke(prompt.format(topic=topic, difficulty=difficulty))
+                self.logger.info(f"Generating question for topic {topic} with difficulty {difficulty}")
+
+                response = self.llm.invoke(prompt.format(topic=topic , difficulty=difficulty))
+
                 parsed = parser.parse(response.content)
-                self.logger.info("Successfully parsed the question")
+
+                self.logger.info("Sucesfully parsed the question")
 
                 return parsed
             
             except Exception as e:
-                self.logger.error(f"Error coming: {str(e)}")
-                if attempt == settings.MAX_RETRIES-1:
-                    raise CustomException(f"Generation failed after{settings.MAX_RETRIES} attempts", e)
+                self.logger.error(f"Error coming : {str(e)}")
+                if attempt==settings.MAX_RETRIES-1:
+                    raise CustomException(f"Generation failed after {settings.MAX_RETRIES} attempts", e)
                 
+    
     def generate_mcq(self,topic:str,difficulty:str='medium') -> MCQQuestion:
         try:
             parser = PydanticOutputParser(pydantic_object=MCQQuestion)

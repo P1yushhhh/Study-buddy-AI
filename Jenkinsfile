@@ -24,8 +24,9 @@ pipeline {
              steps {
                  script {
                      echo 'Pushing Docker image to DockerHub...'
-                     docker.withRegistry('https://registry.hub.docker.com' , "${DOCKER_HUB_CREDENTIALS_ID}") {
+                     docker.withRegistry('https://registry-1.docker.io', "${DOCKER_HUB_CREDENTIALS_ID}") {
                          dockerImage.push("${IMAGE_TAG}")
+                         dockerImage.push("latest")
                      }
                  }
              }
@@ -45,11 +46,11 @@ pipeline {
                  script {
                      withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                          sh '''
-                         git config user.name "p1yushhhh"
+                         git config user.name "P1yushhhh"
                          git config user.email "p1yushhhchawla2307@gmail.com"
                          git add manifests/deployment.yaml
                          git commit -m "Update image tag to ${IMAGE_TAG}" || echo "No changes to commit"
-                         git push https://${GIT_USER}:${GIT_PASS}@github.com/p1yushhhh/Study-Buddy-AI.git HEAD:main
+                         git push https://${GIT_USER}:${GIT_PASS}@github.com/P1yushhhh/Study-buddy-AI.git HEAD:main
                          '''
                      }
                  }

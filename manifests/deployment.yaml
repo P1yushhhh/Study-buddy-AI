@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: studybuddy-app
-        image: iblamepiyush/study-buddy:__IMAGE_TAG__
+        image: iblamepiyush/study-buddy:v11
         ports:
         - containerPort: 8501
         env:

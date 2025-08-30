@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: studybuddy-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: studybuddy-app
+  template:
+    metadata:
+      labels:
+        app: studybuddy-app
+    spec:
+      containers:
+      - name: studybuddy-app
+        image: iblamepiyush/studybuddy:v17
+        ports:
+        - containerPort: 8501
+        env:
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: openai-api-secret
+              key: OPENAI_API_KEY
